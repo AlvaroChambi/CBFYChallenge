@@ -14,3 +14,9 @@ class CbfyRepository @Inject constructor(private val productsService: ProductsSe
         throw Exception()
     }
 }
+
+class MockRepository@Inject constructor(): Repository {
+    override fun fetchProducts(): ProductsData {
+        return ProductsData(ArrayList())
+    }
+}

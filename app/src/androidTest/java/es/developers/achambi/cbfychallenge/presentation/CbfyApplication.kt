@@ -1,12 +1,12 @@
-/*
 package es.developers.achambi.cbfychallenge.presentation
 
 import android.app.Application
 import android.content.Context
-import androidx.annotation.NonNull
 import androidx.lifecycle.Lifecycle
 import dagger.*
-import es.developers.achambi.cbfychallenge.data.CbfyRepository
+import es.developers.achambi.cbfychallenge.BaseUITest
+import es.developers.achambi.cbfychallenge.ProductsUITest
+import es.developers.achambi.cbfychallenge.data.MockRepository
 import es.developers.achambi.cbfychallenge.data.ProductsService
 import es.developers.achambi.cbfychallenge.data.Repository
 import es.developers.achambi.cbfychallenge.domain.ProductsUseCase
@@ -17,12 +17,8 @@ import javax.inject.Singleton
 
 @Singleton
 @Component(modules = [ServiceModule::class, RepositoryModule::class])
-interface ComponentGraph {
-    @Component.Factory
-    interface Factory {
-        fun create(@BindsInstance context: Context): ComponentGraph
-    }
-    fun inject(fragment: ProductsFragment)
+interface TestComponent {
+    fun inject(uiTest: ProductsUITest)
 }
 
 class PresenterFactory @Inject constructor(private val executor: Executor,
@@ -36,7 +32,7 @@ class PresenterFactory @Inject constructor(private val executor: Executor,
 @Module
 abstract class RepositoryModule {
     @Binds
-    abstract fun provideRepository(repository: CbfyRepository): Repository
+    abstract fun provideRepository(repository: MockRepository): Repository
 }
 
 @Module
@@ -60,11 +56,16 @@ class ServiceModule {
 }
 
 class CbfyApplication: Application() {
-    val graph: ComponentGraph by lazy {
-        DaggerComponentGraph.factory().create(this)
+    companion object {
+        lateinit var instance: CbfyApplication
+    }
+
+    val graph: TestComponent by lazy {
+        TestComponent.factory().create(this)
     }
 
     override fun onCreate() {
         super.onCreate()
+        instance = this
     }
-}*/
+}
