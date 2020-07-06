@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">cbfychallenge</string>
+    <string name="price_format">%1$s €</string>
 </resources>

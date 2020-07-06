@@ -25,9 +25,10 @@ interface ComponentGraph {
 }
 
 class PresenterFactory @Inject constructor(private val executor: Executor,
-                                           private val useCase: ProductsUseCase) {
+                                           private val useCase: ProductsUseCase,
+                                           private val builder: PresentationBuilder) {
     fun createPresenter(screen: ProductsScreen, lifecycle: Lifecycle): ProductsPresenter {
-        return ProductsPresenter(screen, lifecycle, executor, useCase)
+        return ProductsPresenter(screen, lifecycle, executor, useCase, builder)
     }
 }
 
