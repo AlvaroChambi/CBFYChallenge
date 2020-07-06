@@ -11,28 +11,33 @@
         android:id="@+id/product_item_image_view"
         android:layout_width="160dp"
         android:layout_height="160dp"
+        android:layout_marginTop="24dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@color/colorPrimary" />
+        app:srcCompat="@color/colorAccent" />
 
     <TextView
         android:id="@+id/product_item_name_text"
+        style="@style/Subtitle1"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="24dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/product_item_price_text"
+        android:layout_marginTop="16dp"
+        android:fontFamily="@font/rubik_medium"
+        android:gravity="center"
+        app:layout_constraintEnd_toEndOf="@+id/product_item_image_view"
         app:layout_constraintStart_toStartOf="@+id/product_item_image_view"
         app:layout_constraintTop_toBottomOf="@+id/product_item_image_view"
         tools:text="Tshit" />
 
     <TextView
         android:id="@+id/product_item_price_text"
+        style="@style/Body1"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="@+id/product_item_image_view"
-        app:layout_constraintTop_toBottomOf="@+id/product_item_image_view"
+        android:gravity="center"
+        app:layout_constraintEnd_toEndOf="@+id/product_item_name_text"
+        app:layout_constraintStart_toStartOf="@+id/product_item_name_text"
+        app:layout_constraintTop_toBottomOf="@+id/product_item_name_text"
         tools:text="23€" />
 </androidx.constraintlayout.widget.ConstraintLayout>
