@@ -2,13 +2,20 @@ package es.developers.achambi.cbfychallenge.presentation
 
 import android.app.Application
 import android.content.Context
-import androidx.annotation.NonNull
 import androidx.lifecycle.Lifecycle
 import dagger.*
 import es.developers.achambi.cbfychallenge.data.CbfyRepository
 import es.developers.achambi.cbfychallenge.data.ProductsService
 import es.developers.achambi.cbfychallenge.data.Repository
 import es.developers.achambi.cbfychallenge.domain.ProductsUseCase
+import es.developers.achambi.cbfychallenge.presentation.product.DetailsPresentationBuilder
+import es.developers.achambi.cbfychallenge.presentation.product.ProductDetailFragment
+import es.developers.achambi.cbfychallenge.presentation.product.ProductDetailPresenter
+import es.developers.achambi.cbfychallenge.presentation.product.ProductDetailScreen
+import es.developers.achambi.cbfychallenge.presentation.products.PresentationBuilder
+import es.developers.achambi.cbfychallenge.presentation.products.ProductsFragment
+import es.developers.achambi.cbfychallenge.presentation.products.ProductsPresenter
+import es.developers.achambi.cbfychallenge.presentation.products.ProductsScreen
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Inject
@@ -22,13 +29,28 @@ interface ComponentGraph {
         fun create(@BindsInstance context: Context): ComponentGraph
     }
     fun inject(fragment: ProductsFragment)
+    fun inject(fragment: ProductDetailFragment)
 }
 
-class PresenterFactory @Inject constructor(private val executor: Executor,
-                                           private val useCase: ProductsUseCase,
-                                           private val builder: PresentationBuilder) {
+class ProductPresenterFactory @Inject constructor(private val executor: Executor,
+                                                  private val useCase: ProductsUseCase,
+                                                  private val builder: PresentationBuilder
+) {
     fun createPresenter(screen: ProductsScreen, lifecycle: Lifecycle): ProductsPresenter {
-        return ProductsPresenter(screen, lifecycle, executor, useCase, builder)
+        return ProductsPresenter(
+            screen,
+            lifecycle,
+            executor,
+            useCase,
+            builder
+        )
+    }
+}
+
+class DetailsPresenterFactory@Inject constructor(private val executor: Executor,
+                                                 private val builder: DetailsPresentationBuilder) {
+    fun createPresenter(screen: ProductDetailScreen, lifecycle: Lifecycle): ProductDetailPresenter {
+        return ProductDetailPresenter(screen, lifecycle, executor, builder)
     }
 }
 
