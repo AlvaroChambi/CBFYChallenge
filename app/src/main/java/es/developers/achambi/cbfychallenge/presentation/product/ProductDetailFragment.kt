@@ -42,6 +42,7 @@ class ProductDetailFragment: BaseFragment(), ProductDetailScreen {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        toolbar2.setNavigationIcon(R.drawable.baseline_keyboard_backspace_24)
         presenter.onViewCreated(product)
     }
 
