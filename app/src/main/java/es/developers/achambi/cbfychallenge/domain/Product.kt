@@ -8,13 +8,13 @@ import java.math.BigDecimal
 enum class Discount {
     TWO_FOR_ONE,
     THREE_MORE,
-    EMPTY
+    NONE
 }
 
 data class Product( val code: String,
                     val name: String,
                     val price: BigDecimal,
-                    var discount: Discount = Discount.EMPTY): Parcelable {
+                    var discount: Discount = Discount.NONE): Parcelable {
     constructor(parcel: Parcel) : this(
         parcel.readString().toString(),
         parcel.readString().toString(),

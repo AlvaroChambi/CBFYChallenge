@@ -3,10 +3,13 @@ package es.developers.achambi.cbfychallenge.presentation
 import android.app.Application
 import android.content.Context
 import androidx.lifecycle.Lifecycle
+import androidx.room.Room
 import dagger.*
 import es.developers.achambi.cbfychallenge.data.CbfyRepository
 import es.developers.achambi.cbfychallenge.data.ProductsService
 import es.developers.achambi.cbfychallenge.data.Repository
+import es.developers.achambi.cbfychallenge.data.database.AppDatabase
+import es.developers.achambi.cbfychallenge.data.database.DiscountEntity
 import es.developers.achambi.cbfychallenge.domain.CartUseCase
 import es.developers.achambi.cbfychallenge.domain.ProductsUseCase
 import es.developers.achambi.cbfychallenge.presentation.cart.CartFragment
@@ -82,6 +85,7 @@ class ServiceModule {
         return Executor.buildExecutor()
     }
 
+    //TODO move to gradle or resources
     @Provides
     @Singleton
     fun provideRetrofitService(): ProductsService {
@@ -91,10 +95,25 @@ class ServiceModule {
             .build()
         return retrofit.create(ProductsService::class.java)
     }
+
+    @Provides
+    @Singleton
+    fun provideDatabase(context: Context): AppDatabase {
+        //TODO just be done just on first run of the app
+        val database = Room.databaseBuilder(context, AppDatabase::class.java, "cbfydatabase")
+            .build()
+        database.discountsDao().insert(DiscountEntity("TWO_FOR_ONE", "VOUCHER"))
+        database.discountsDao().insert(DiscountEntity("THREE_MORE", "TSHIRT"))
+        return database
+    }
 }
 
 class CbfyApplication: Application() {
     val graph: ComponentGraph by lazy {
         DaggerComponentGraph.factory().create(this)
+    }
+
+    override fun onCreate() {
+        super.onCreate()
     }
 }

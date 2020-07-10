@@ -30,7 +30,7 @@ class DetailsPresentationBuilder @Inject constructor(private val productBuilder:
         var icon = 0
         var description = ""
         when(product.discount) {
-            Discount.EMPTY -> {}
+            Discount.NONE -> {}
             Discount.TWO_FOR_ONE -> {
                 icon = R.drawable.discount_2_for_1_image
                 description = context.getString(R.string.discount_two_for_one_text)
