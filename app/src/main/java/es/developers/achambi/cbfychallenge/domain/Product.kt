@@ -44,3 +44,6 @@ data class Product( val code: String,
     }
 
 }
+
+data class CartProduct( val product: Product,
+                        val quantity: Int)

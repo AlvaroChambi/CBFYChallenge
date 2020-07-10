@@ -7,7 +7,12 @@ import dagger.*
 import es.developers.achambi.cbfychallenge.data.CbfyRepository
 import es.developers.achambi.cbfychallenge.data.ProductsService
 import es.developers.achambi.cbfychallenge.data.Repository
+import es.developers.achambi.cbfychallenge.domain.CartUseCase
 import es.developers.achambi.cbfychallenge.domain.ProductsUseCase
+import es.developers.achambi.cbfychallenge.presentation.cart.CartFragment
+import es.developers.achambi.cbfychallenge.presentation.cart.CartItemBuilder
+import es.developers.achambi.cbfychallenge.presentation.cart.CartPresenter
+import es.developers.achambi.cbfychallenge.presentation.cart.CartScreen
 import es.developers.achambi.cbfychallenge.presentation.product.DetailsPresentationBuilder
 import es.developers.achambi.cbfychallenge.presentation.product.ProductDetailFragment
 import es.developers.achambi.cbfychallenge.presentation.product.ProductDetailPresenter
@@ -30,6 +35,7 @@ interface ComponentGraph {
     }
     fun inject(fragment: ProductsFragment)
     fun inject(fragment: ProductDetailFragment)
+    fun inject(fragment: CartFragment)
 }
 
 class ProductPresenterFactory @Inject constructor(private val executor: Executor,
@@ -51,6 +57,13 @@ class DetailsPresenterFactory@Inject constructor(private val executor: Executor,
                                                  private val builder: DetailsPresentationBuilder) {
     fun createPresenter(screen: ProductDetailScreen, lifecycle: Lifecycle): ProductDetailPresenter {
         return ProductDetailPresenter(screen, lifecycle, executor, builder)
+    }
+}
+
+class CartPresenterFactory@Inject constructor(private val executor: Executor,
+                           private val useCase: CartUseCase, private val builder: CartItemBuilder) {
+    fun createPresenter(screen: CartScreen, lifecycle: Lifecycle): CartPresenter {
+        return CartPresenter(screen, lifecycle, executor, useCase, builder)
     }
 }
 

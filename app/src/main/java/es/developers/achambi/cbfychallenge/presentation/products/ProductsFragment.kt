@@ -1,9 +1,9 @@
 package es.developers.achambi.cbfychallenge.presentation.products
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.util.Log
+import android.view.*
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -13,7 +13,9 @@ import es.developers.achambi.cbfychallenge.presentation.BaseFragment
 import es.developers.achambi.cbfychallenge.presentation.CbfyApplication
 import es.developers.achambi.cbfychallenge.presentation.ProductPresenterFactory
 import es.developers.achambi.cbfychallenge.presentation.Screen
+import es.developers.achambi.cbfychallenge.presentation.cart.CartActivity
 import es.developers.achambi.cbfychallenge.presentation.product.ProductDetailActivity
+import kotlinx.android.synthetic.main.product_details_layout.*
 import kotlinx.android.synthetic.main.product_item_layout.view.*
 import kotlinx.android.synthetic.main.products_layout.*
 import javax.inject.Inject
@@ -35,14 +37,24 @@ class ProductsFragment: BaseFragment(),
     //lifecycle only instantiate when the fragment is created, shared lifecycle
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
         (activity?.application as CbfyApplication).graph.inject(this)
         presenter = presenterFactory.createPresenter(this, lifecycle)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        (activity as AppCompatActivity).setSupportActionBar(toolbar)
         product_recycler_view.layoutManager = LinearLayoutManager(context)
         presenter.onViewCreated()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.product_detail_menu, menu)
+        menu.getItem(0).actionView.setOnClickListener {
+            startActivity(activity?.let { it1 -> CartActivity.getStartIntent(it1)})
+        }
     }
 
     override fun showProducts(products: List<ProductPresentation>) {

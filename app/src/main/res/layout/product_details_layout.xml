@@ -75,8 +75,8 @@
         app:srcCompat="@drawable/discount_2_for_1_image" />
 
     <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar2"
-        android:layout_width="409dp"
+        android:id="@+id/products_toolbar"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="?attr/colorPrimary"
         android:minHeight="?attr/actionBarSize"
@@ -85,6 +85,6 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:menu="@menu/product_detail_menu"/>
+        app:title=" "/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

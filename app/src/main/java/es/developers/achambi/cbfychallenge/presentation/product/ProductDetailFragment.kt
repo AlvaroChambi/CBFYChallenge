@@ -1,10 +1,13 @@
 package es.developers.achambi.cbfychallenge.presentation.product
 
 import android.os.Bundle
-import android.view.View
+import android.util.Log
+import android.view.*
+import androidx.appcompat.app.AppCompatActivity
 import es.developers.achambi.cbfychallenge.R
 import es.developers.achambi.cbfychallenge.domain.Product
 import es.developers.achambi.cbfychallenge.presentation.*
+import es.developers.achambi.cbfychallenge.presentation.cart.CartActivity
 import kotlinx.android.synthetic.main.product_details_layout.*
 import javax.inject.Inject
 
@@ -34,6 +37,7 @@ class ProductDetailFragment: BaseFragment(), ProductDetailScreen {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
         //will always be available, there's no other way to invoke this fragment
         product = arguments?.getParcelable(PRODUCT_KEY)!!
         (activity?.application as CbfyApplication).graph.inject(this)
@@ -42,8 +46,18 @@ class ProductDetailFragment: BaseFragment(), ProductDetailScreen {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        toolbar2.setNavigationIcon(R.drawable.baseline_keyboard_backspace_24)
+        (activity as AppCompatActivity).setSupportActionBar(products_toolbar)
+        products_toolbar.setNavigationIcon(R.drawable.baseline_keyboard_backspace_24)
+        products_toolbar.setNavigationOnClickListener { activity?.onBackPressed() }
         presenter.onViewCreated(product)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.product_detail_menu, menu)
+        menu.getItem(0).actionView.setOnClickListener {
+            startActivity(activity?.let { it1 -> CartActivity.getStartIntent(it1) })
+        }
     }
 
     override fun showProduct(presentation: ProductDetailPresentation) {
