@@ -3,6 +3,7 @@ package es.developers.achambi.cbfychallenge.presentation.products
 import android.content.Context
 import androidx.lifecycle.Lifecycle
 import es.developers.achambi.cbfychallenge.R
+import es.developers.achambi.cbfychallenge.domain.Discount
 import es.developers.achambi.cbfychallenge.domain.Product
 import es.developers.achambi.cbfychallenge.domain.ProductsUseCase
 import es.developers.achambi.cbfychallenge.presentation.BaseExecutor
@@ -34,6 +35,7 @@ class ProductsPresenter (screen: ProductsScreen, lifecycle: Lifecycle,
         })
     }
 
+    //TODO (move cache to use case, pass just id)
     fun productSelected(code: String) {
         //TODO check if this make sense
         screen.navigateToDetails(products.find { it.code == code }!!)
@@ -50,15 +52,22 @@ class PresentationBuilder@Inject constructor(private val context: Context) {
     }
 
     fun build(product: Product): ProductPresentation {
+        val discountResource = when(product.discount) {
+            Discount.TWO_FOR_ONE -> R.drawable.discount_2_for_1_image
+            Discount.THREE_MORE -> R.drawable.discount_3_more_image
+            Discount.NONE -> 0
+        }
         return ProductPresentation(
             product.code,
             product.name,
-            context.getString(R.string.price_format, product.price.toString())
+            context.getString(R.string.price_format, product.price.toString()),
+            discountResource
         )
     }
 }
 
 class ProductPresentation(val code: String,
                           val name: String,
-                          val price: String)
+                          val price: String,
+                          val discountImage: Int)
 

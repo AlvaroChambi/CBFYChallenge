@@ -39,6 +39,7 @@ interface ComponentGraph {
     fun inject(fragment: ProductsFragment)
     fun inject(fragment: ProductDetailFragment)
     fun inject(fragment: CartFragment)
+    fun inject(app: CbfyApplication)
 }
 
 class ProductPresenterFactory @Inject constructor(private val executor: Executor,
@@ -99,21 +100,29 @@ class ServiceModule {
     @Provides
     @Singleton
     fun provideDatabase(context: Context): AppDatabase {
-        //TODO just be done just on first run of the app
-        val database = Room.databaseBuilder(context, AppDatabase::class.java, "cbfydatabase")
-            .build()
-        database.discountsDao().insert(DiscountEntity("TWO_FOR_ONE", "VOUCHER"))
-        database.discountsDao().insert(DiscountEntity("THREE_MORE", "TSHIRT"))
-        return database
+        return Room.databaseBuilder(context, AppDatabase::class.java, "cbfydatabase").build()
     }
 }
 
 class CbfyApplication: Application() {
+    @Inject
+    lateinit var database: AppDatabase
+    @Inject
+    lateinit var executor: Executor
     val graph: ComponentGraph by lazy {
         DaggerComponentGraph.factory().create(this)
     }
 
     override fun onCreate() {
         super.onCreate()
+        graph.inject(this)
+        val preferences = getSharedPreferences("default", Context.MODE_PRIVATE)
+        if(preferences.getBoolean("FIRST", true)) {
+            preferences.edit().putBoolean("FIRST", false).apply()
+            executor.execute {
+                database.discountsDao().insert(DiscountEntity("TWO_FOR_ONE", "VOUCHER"))
+                database.discountsDao().insert(DiscountEntity("THREE_MORE", "TSHIRT"))
+            }
+        }
     }
 }

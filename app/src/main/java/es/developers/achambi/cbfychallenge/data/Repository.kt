@@ -1,5 +1,7 @@
 package es.developers.achambi.cbfychallenge.data
 
+import es.developers.achambi.cbfychallenge.data.database.DiscountEntity
+
 class ProductsData(var products: List<ProductData>)
 
 class ProductData(var code: String = "",
@@ -8,4 +10,5 @@ class ProductData(var code: String = "",
 
 interface Repository {
     fun fetchProducts(): ProductsData
+    fun fetchDiscounts(): List<DiscountEntity>
 }

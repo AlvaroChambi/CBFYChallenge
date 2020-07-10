@@ -4,21 +4,21 @@ import es.developers.achambi.cbfychallenge.data.Repository
 import java.math.BigDecimal
 import javax.inject.Inject
 
-class ProductsUseCase @Inject constructor(private val repository: Repository) {
+class ProductsUseCase @Inject constructor(private val repository: Repository,
+                                          private val discountsUseCase: DiscountsUseCase) {
     fun fetchProducts(): List<Product> {
         val products = ArrayList<Product>()
         //fetch discount to link with our product
-        repository.fetchProducts().products.forEach {
-            if(it.code == "VOUCHER") {
-                products.add( Product(it.code, it.name, BigDecimal(it.price.toString()),
-                    Discount.TWO_FOR_ONE) )
-            } else if(it.code == "TSHIRT") {
-                products.add( Product(it.code, it.name, BigDecimal(it.price.toString()),
-                    Discount.THREE_MORE))
-            } else {
-                products.add( Product(it.code, it.name, BigDecimal(it.price.toString())))
-            }
-
+        val discounts = discountsUseCase.getDiscounts()
+        repository.fetchProducts().products.forEach { product ->
+           val discount = discounts.find { it.first == product.code }
+           if(discount != null) {
+               products.add(Product(product.code, product.name, BigDecimal(product.price.toString()),
+                       discount.second) )
+           } else {
+               products.add(Product(product.code, product.name, BigDecimal(product.price.toString()),
+                   Discount.NONE) )
+           }
         }
 
         return products

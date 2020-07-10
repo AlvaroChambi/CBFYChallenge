@@ -107,6 +107,7 @@ class ProductsAdapter(private val list: List<ProductPresentation>,
     override fun onBindViewHolder(holder: ProductsHolder, position: Int) {
         holder.itemView.product_item_name_text.text = list[position].name
         holder.itemView.product_item_price_text.text = list[position].price
+        holder.itemView.product_item_discount_image.setImageResource(list[position].discountImage)
     }
 
 }
