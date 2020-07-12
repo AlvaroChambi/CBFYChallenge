@@ -45,7 +45,8 @@ data class Product( val code: String,
 
 }
 
-data class CartProduct( val product: Product,
+data class CartProduct( val id: Long,
+                        val product: Product,
                         val quantity: Int,
                         val totalPrice: BigDecimal)
 

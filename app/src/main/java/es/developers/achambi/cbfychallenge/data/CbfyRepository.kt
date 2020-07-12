@@ -31,11 +31,19 @@ class CbfyRepository @Inject constructor(private val productsService: ProductsSe
         }
     }
 
-    override fun fetchDiscounts(): List<DiscountEntity> {
-        return database.discountsDao().fetchDiscounts()
-    }
-
     override fun fetchCartProducts(): List<DetailedCartEntity> {
         return database.cartDao().fetchCartItems()
+    }
+
+    override fun addToCart(item: CartProductEntity) {
+        database.cartDao().insert(item)
+    }
+
+    override fun updateCartItem(item: CartProductEntity) {
+        database.cartDao().update(item)
+    }
+
+    override fun deleteCartItem(item: CartProductEntity) {
+        database.cartDao().delete(item)
     }
 }

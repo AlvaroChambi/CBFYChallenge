@@ -55,9 +55,10 @@ class ProductPresenterFactory @Inject constructor(private val executor: Executor
 }
 
 class DetailsPresenterFactory@Inject constructor(private val executor: Executor,
-                                                 private val builder: DetailsPresentationBuilder) {
+                                                 private val builder: DetailsPresentationBuilder,
+                                                private val useCase: CartUseCase) {
     fun createPresenter(screen: ProductDetailScreen, lifecycle: Lifecycle): ProductDetailPresenter {
-        return ProductDetailPresenter(screen, lifecycle, executor, builder)
+        return ProductDetailPresenter(screen, lifecycle, executor, builder, useCase)
     }
 }
 

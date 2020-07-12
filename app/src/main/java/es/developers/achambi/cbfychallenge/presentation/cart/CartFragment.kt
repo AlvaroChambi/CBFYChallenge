@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import es.developers.achambi.cbfychallenge.R
@@ -19,7 +20,7 @@ import kotlinx.android.synthetic.main.cart_fragment_layout.*
 import kotlinx.android.synthetic.main.cart_item_layout.view.*
 import javax.inject.Inject
 
-class CartFragment: BaseFragment(), CartScreen {
+class CartFragment: BaseFragment(), CartScreen, CartItemListener {
     @Inject
     lateinit var  presenterFactory: CartPresenterFactory
     private lateinit var presenter: CartPresenter
@@ -46,7 +47,7 @@ class CartFragment: BaseFragment(), CartScreen {
     }
 
     override fun showCartItems(cartPresentation: CartPresentation) {
-        adapter = ItemsAdapter(cartPresentation.items)
+        adapter = ItemsAdapter(cartPresentation.items, this)
         cart_item_recycler.adapter = adapter
         adapter.notifyDataSetChanged()
 
@@ -59,19 +60,62 @@ class CartFragment: BaseFragment(), CartScreen {
         cart_discount_two_text.text = cartPresentation.twoForOneDiscount
         cart_discount_three_text.text = cartPresentation.threeOrMoreDiscount
     }
+
+    override fun showUpdateError() {
+        Toast.makeText(activity, "Something failed :(. Please try again.", Toast.LENGTH_LONG)
+            .show()
+    }
+
+    override fun onDeleteSelected(id: Long) {
+        presenter.removeItem(id)
+    }
+
+    override fun onDecreaseSelected(id: Long) {
+        presenter.decreaseSelected(id)
+    }
+
+    override fun onIncreaseSelected(id: Long) {
+        presenter.increaseSelected(id)
+    }
 }
 
 interface CartScreen: Screen {
     fun showCartItems(cartPresentation: CartPresentation)
+    fun showUpdateError()
 }
 
 class ItemHolder(itemView: View): RecyclerView.ViewHolder(itemView)
 
-class ItemsAdapter(private val list: List<CartItemPresentation>): RecyclerView.Adapter<ItemHolder>() {
+interface CartItemListener {
+    fun onDeleteSelected(id: Long)
+    fun onDecreaseSelected(id: Long)
+    fun onIncreaseSelected(id: Long)
+}
+
+class ItemsAdapter(private val list: List<CartItemPresentation>,
+                   private val listener: CartItemListener): RecyclerView.Adapter<ItemHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemHolder {
         val rootView = LayoutInflater.from(parent.context).inflate(
             R.layout.cart_item_layout, parent, false)
         val holder = ItemHolder(rootView)
+        rootView.cart_item_delete_image.setOnClickListener {
+            val position = holder.adapterPosition
+            if(position != RecyclerView.NO_POSITION) {
+                listener.onDeleteSelected(list[position].id)
+            }
+        }
+        rootView.cart_item_decrease_image.setOnClickListener {
+            val position = holder.adapterPosition
+            if(position != RecyclerView.NO_POSITION) {
+                listener.onDecreaseSelected(list[position].id)
+            }
+        }
+        rootView.cart_item_increase_image.setOnClickListener {
+            val position = holder.adapterPosition
+            if(position != RecyclerView.NO_POSITION) {
+                listener.onIncreaseSelected(list[position].id)
+            }
+        }
         return holder
     }
 
@@ -88,7 +132,8 @@ class ItemsAdapter(private val list: List<CartItemPresentation>): RecyclerView.A
 }
 
 //TODO explain why this is better than having the strings of it
-class CartItemPresentation(val productPresentation: ProductPresentation,
+class CartItemPresentation(val  id: Long,
+                            val productPresentation: ProductPresentation,
                            val quantity: String, val totalPrice: String)
 
 class CartPresentation(val items: List<CartItemPresentation>, val subtotal: String,
@@ -100,7 +145,7 @@ class CartItemBuilder@Inject constructor( private val productBuilder: Presentati
     fun build(items: List<CartProduct>): List<CartItemPresentation> {
         val list = ArrayList<CartItemPresentation>()
         items.forEach {
-            list.add( CartItemPresentation( productBuilder.build(it.product),
+            list.add( CartItemPresentation( it.id, productBuilder.build(it.product),
                 it.quantity.toString(), it.totalPrice.toString()) )
         }
         return list

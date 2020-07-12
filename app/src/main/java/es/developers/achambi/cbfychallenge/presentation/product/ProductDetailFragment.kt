@@ -2,6 +2,7 @@ package es.developers.achambi.cbfychallenge.presentation.product
 
 import android.os.Bundle
 import android.view.*
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import es.developers.achambi.cbfychallenge.R
 import es.developers.achambi.cbfychallenge.domain.Product
@@ -48,6 +49,9 @@ class ProductDetailFragment: BaseFragment(), ProductDetailScreen {
         (activity as AppCompatActivity).setSupportActionBar(products_toolbar)
         products_toolbar.setNavigationIcon(R.drawable.baseline_keyboard_backspace_24)
         products_toolbar.setNavigationOnClickListener { activity?.onBackPressed() }
+        product_detail_cart_button.setOnClickListener {
+            presenter.onAddToCart(1)
+        }
         presenter.onViewCreated(product)
     }
 
@@ -65,10 +69,22 @@ class ProductDetailFragment: BaseFragment(), ProductDetailScreen {
         product_details_discount_image.setImageResource(presentation.discountIcon)
         product_detail_description_text.text = presentation.discountText
     }
+
+    override fun showAddToCartSuccess() {
+        Toast.makeText(activity, "Item successfully added to the cart", Toast.LENGTH_LONG)
+            .show()
+    }
+
+    override fun showAddToCartError() {
+        Toast.makeText(activity, "Something failed :(. Please try again.", Toast.LENGTH_LONG)
+            .show()
+    }
 }
 
 interface ProductDetailScreen: Screen {
     fun showProduct(presentation: ProductDetailPresentation)
+    fun showAddToCartSuccess()
+    fun showAddToCartError()
 }
 
 class ProductDetailPresentation(val name: String,

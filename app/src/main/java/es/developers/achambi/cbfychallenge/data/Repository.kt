@@ -10,6 +10,8 @@ class ProductData(var code: String = "",
 
 interface Repository {
     fun fetchProducts(): List<DetailedProductEntity>
-    fun fetchDiscounts(): List<DiscountEntity>
     fun fetchCartProducts(): List<DetailedCartEntity>
+    fun addToCart(item: CartProductEntity)
+    fun updateCartItem(item: CartProductEntity)
+    fun deleteCartItem(item: CartProductEntity)
 }

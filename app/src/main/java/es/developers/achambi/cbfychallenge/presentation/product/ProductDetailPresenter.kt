@@ -3,24 +3,42 @@ package es.developers.achambi.cbfychallenge.presentation.product
 import android.content.Context
 import androidx.lifecycle.Lifecycle
 import es.developers.achambi.cbfychallenge.R
+import es.developers.achambi.cbfychallenge.domain.CartUseCase
 import es.developers.achambi.cbfychallenge.domain.Discount
 import es.developers.achambi.cbfychallenge.domain.Product
-import es.developers.achambi.cbfychallenge.presentation.Executor
-import es.developers.achambi.cbfychallenge.presentation.Presenter
+import es.developers.achambi.cbfychallenge.presentation.*
 import es.developers.achambi.cbfychallenge.presentation.products.PresentationBuilder
 import javax.inject.Inject
 
 class ProductDetailPresenter(screen: ProductDetailScreen,
                              lifecycle: Lifecycle,
                              executor: Executor,
-                             private val presentationBuilder: DetailsPresentationBuilder)
+                             private val presentationBuilder: DetailsPresentationBuilder,
+                             private val cartUseCase: CartUseCase)
     : Presenter<ProductDetailScreen>(screen, lifecycle, executor) {
 
+    //TODO cache on use case!
     private lateinit var product: Product
 
     fun onViewCreated(product: Product) {
         this.product = product
         screen.showProduct(presentationBuilder.build(product))
+    }
+
+    fun onAddToCart(quantity: Int) {
+        perform( object : Request<Any> {
+            override fun perform(): Any {
+                return cartUseCase.addtoCart(product.code, quantity)
+            }
+        }, object : SuccessHandler<Any> {
+            override fun onSuccess(response: Any) {
+                screen.showAddToCartSuccess()
+            }
+        }, object : ErrorHandler {
+            override fun onError() {
+                screen.showAddToCartError()
+            }
+        })
     }
 }
 
