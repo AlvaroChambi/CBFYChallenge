@@ -31,11 +31,11 @@ class DetailsPresentationBuilder @Inject constructor(private val productBuilder:
         var description = ""
         when(product.discount) {
             Discount.NONE -> {}
-            Discount.TWO_FOR_ONE -> {
+            Discount.TWOFORONE -> {
                 icon = R.drawable.discount_2_for_1_image
                 description = context.getString(R.string.discount_two_for_one_text)
             }
-            Discount.THREE_MORE ->  {
+            Discount.THREEORMORE ->  {
                 icon = R.drawable.discount_3_more_image
                 description = context.getString(R.string.discount_three_or_more_text)
             }

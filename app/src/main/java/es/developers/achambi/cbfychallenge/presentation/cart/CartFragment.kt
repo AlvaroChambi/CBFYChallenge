@@ -1,6 +1,5 @@
 package es.developers.achambi.cbfychallenge.presentation.cart
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,6 +8,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import es.developers.achambi.cbfychallenge.R
 import es.developers.achambi.cbfychallenge.domain.CartProduct
+import es.developers.achambi.cbfychallenge.domain.CartProducts
 import es.developers.achambi.cbfychallenge.presentation.BaseFragment
 import es.developers.achambi.cbfychallenge.presentation.CartPresenterFactory
 import es.developers.achambi.cbfychallenge.presentation.CbfyApplication
@@ -45,15 +45,24 @@ class CartFragment: BaseFragment(), CartScreen {
         presenter.onViewCreated()
     }
 
-    override fun showCartItems(items: List<CartItemPresentation>) {
-        adapter = ItemsAdapter(items)
+    override fun showCartItems(cartPresentation: CartPresentation) {
+        adapter = ItemsAdapter(cartPresentation.items)
         cart_item_recycler.adapter = adapter
         adapter.notifyDataSetChanged()
+
+        cart_total_price_text.text = cartPresentation.total
+        cart_subtotal_price_text.text = cartPresentation.subtotal
+        twoforone_price_group.visibility = cartPresentation.showTwoForOneValue
+        twoforone_discount_group.visibility = cartPresentation.showTwoforOneInfo
+        threeormore_price_group.visibility = cartPresentation.showThreeOrMoreValue
+        threeormore_discount_group.visibility = cartPresentation.showThreeOrMoreInfo
+        cart_discount_two_text.text = cartPresentation.twoForOneDiscount
+        cart_discount_three_text.text = cartPresentation.threeOrMoreDiscount
     }
 }
 
 interface CartScreen: Screen {
-    fun showCartItems(items: List<CartItemPresentation>)
+    fun showCartItems(cartPresentation: CartPresentation)
 }
 
 class ItemHolder(itemView: View): RecyclerView.ViewHolder(itemView)
@@ -72,7 +81,7 @@ class ItemsAdapter(private val list: List<CartItemPresentation>): RecyclerView.A
 
     override fun onBindViewHolder(holder: ItemHolder, position: Int) {
         holder.itemView.cart_item_name_text.text = list[position].productPresentation.name
-        holder.itemView.cart_item_price_text.text = list[position].productPresentation.price
+        holder.itemView.cart_item_price_text.text = list[position].totalPrice
         holder.itemView.cart_item_quantity_text.text = list[position].quantity
     }
 
@@ -80,16 +89,53 @@ class ItemsAdapter(private val list: List<CartItemPresentation>): RecyclerView.A
 
 //TODO explain why this is better than having the strings of it
 class CartItemPresentation(val productPresentation: ProductPresentation,
-                           val quantity: String)
+                           val quantity: String, val totalPrice: String)
 
-class CartItemBuilder@Inject constructor
-    (private val context: Context, private val productBuilder: PresentationBuilder) {
+class CartPresentation(val items: List<CartItemPresentation>, val subtotal: String,
+val total: String, val showTwoforOneInfo: Int, val showThreeOrMoreInfo: Int,
+val showTwoForOneValue: Int, val showThreeOrMoreValue: Int,
+val twoForOneDiscount: String, val threeOrMoreDiscount: String)
+
+class CartItemBuilder@Inject constructor( private val productBuilder: PresentationBuilder) {
     fun build(items: List<CartProduct>): List<CartItemPresentation> {
         val list = ArrayList<CartItemPresentation>()
         items.forEach {
             list.add( CartItemPresentation( productBuilder.build(it.product),
-                it.quantity.toString()) )
+                it.quantity.toString(), it.totalPrice.toString()) )
         }
         return list
     }
+}
+
+class CartPresentationBuilder@Inject constructor(private val itemBuilder: CartItemBuilder) {
+    fun build(cartProducts: CartProducts): CartPresentation {
+        val items = itemBuilder.build(cartProducts.cartProducts)
+        val total = cartProducts.total.toString()
+        val subtotal = cartProducts.baseTotal.toString()
+        var showTwoforOneInfo = View.GONE
+        var showTwoForOneValue = View.GONE
+        var showThreeOrMoreInfo = View.GONE
+        var showThreeOrMoreValue = View.GONE
+
+        if(cartProducts.canApplyTwoForOne) {
+            if(cartProducts.twoForOnePrice.toInt() > 0) {
+                showTwoForOneValue = View.VISIBLE
+            } else {
+                showTwoforOneInfo = View.VISIBLE
+            }
+        }
+
+        if(cartProducts.canApplyThreeOrMore) {
+            if(cartProducts.threeOrMorePrice.toInt() > 0) {
+                showThreeOrMoreValue = View.VISIBLE
+            } else {
+                showThreeOrMoreInfo = View.VISIBLE
+            }
+        }
+
+        return CartPresentation(items, subtotal, total, showTwoforOneInfo, showThreeOrMoreInfo,
+            showTwoForOneValue, showThreeOrMoreValue, cartProducts.twoForOnePrice.toString(),
+            cartProducts.threeOrMorePrice.toString())
+    }
+
 }

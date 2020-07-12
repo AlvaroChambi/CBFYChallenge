@@ -8,17 +8,23 @@ import androidx.room.Update
 
 //TODO: fetch everything with a join query?
 
+//TODO: I think I can join products and discounts table and get what i want
 @Dao
 interface ProductsDao {
-    @Query("SELECT * from productentity")
-    fun fetchProducts(): List<ProductEntity>
+    @Query("SELECT productentity.code, productentity.name, productentity.price, discountentity.code as discount " +
+            "from productentity join discountentity on productentity.code==discountentity.product")
+    fun fetchProducts(): List<DetailedProductEntity>
+    @Insert
+    fun insertAll(list: List<ProductEntity>)
 }
 
 @Dao
 interface CartDao {
-    //TODO triple join? should
-    @Query("SELECT * from cartproductentity")
-    fun fetchCartItems(): List<CartProductEntity>
+    @Query("SELECT cartproductentity.id, cartproductentity.product, cartproductentity.quantity, productentity.name, productentity.price, discountentity.code" +
+            " from cartproductentity " +
+            "join productentity on cartproductentity.product==productentity.code " +
+            "join discountentity on cartproductentity.product==discountentity.product")
+    fun fetchCartItems(): List<DetailedCartEntity>
 
     //TODO adding new products
     @Insert(onConflict = REPLACE)

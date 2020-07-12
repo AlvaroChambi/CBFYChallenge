@@ -9,13 +9,10 @@ import es.developers.achambi.cbfychallenge.data.CbfyRepository
 import es.developers.achambi.cbfychallenge.data.ProductsService
 import es.developers.achambi.cbfychallenge.data.Repository
 import es.developers.achambi.cbfychallenge.data.database.AppDatabase
-import es.developers.achambi.cbfychallenge.data.database.DiscountEntity
+import es.developers.achambi.cbfychallenge.data.database.DatabaseUtils
 import es.developers.achambi.cbfychallenge.domain.CartUseCase
 import es.developers.achambi.cbfychallenge.domain.ProductsUseCase
-import es.developers.achambi.cbfychallenge.presentation.cart.CartFragment
-import es.developers.achambi.cbfychallenge.presentation.cart.CartItemBuilder
-import es.developers.achambi.cbfychallenge.presentation.cart.CartPresenter
-import es.developers.achambi.cbfychallenge.presentation.cart.CartScreen
+import es.developers.achambi.cbfychallenge.presentation.cart.*
 import es.developers.achambi.cbfychallenge.presentation.product.DetailsPresentationBuilder
 import es.developers.achambi.cbfychallenge.presentation.product.ProductDetailFragment
 import es.developers.achambi.cbfychallenge.presentation.product.ProductDetailPresenter
@@ -65,7 +62,8 @@ class DetailsPresenterFactory@Inject constructor(private val executor: Executor,
 }
 
 class CartPresenterFactory@Inject constructor(private val executor: Executor,
-                           private val useCase: CartUseCase, private val builder: CartItemBuilder) {
+                                              private val useCase: CartUseCase,
+                                              private val builder: CartPresentationBuilder) {
     fun createPresenter(screen: CartScreen, lifecycle: Lifecycle): CartPresenter {
         return CartPresenter(screen, lifecycle, executor, useCase, builder)
     }
@@ -100,30 +98,25 @@ class ServiceModule {
     @Provides
     @Singleton
     fun provideDatabase(context: Context): AppDatabase {
-        return Room.databaseBuilder(context, AppDatabase::class.java, "cbfydatabase").build()
+        return Room.databaseBuilder(context, AppDatabase::class.java, AppDatabase.databaseName).build()
     }
 }
 
 class CbfyApplication: Application() {
     @Inject
     lateinit var database: AppDatabase
-    @Inject
-    lateinit var executor: Executor
     val graph: ComponentGraph by lazy {
         DaggerComponentGraph.factory().create(this)
     }
 
     override fun onCreate() {
         super.onCreate()
-        //TODO: Add populated database file
-        graph.inject(this)
-        val preferences = getSharedPreferences("default", Context.MODE_PRIVATE)
-        if(preferences.getBoolean("FIRST", true)) {
-            preferences.edit().putBoolean("FIRST", false).apply()
-            executor.execute {
-                database.discountsDao().insert(DiscountEntity("TWO_FOR_ONE", "VOUCHER"))
-                database.discountsDao().insert(DiscountEntity("THREE_MORE", "TSHIRT"))
-            }
+        //TODO: Load preexisting database(should be done on background)
+        try {
+            DatabaseUtils.copyDataBase(this, AppDatabase.databaseName)
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
+        graph.inject(this)
     }
 }

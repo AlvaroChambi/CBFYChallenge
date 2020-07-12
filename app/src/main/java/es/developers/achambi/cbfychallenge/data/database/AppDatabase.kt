@@ -9,4 +9,8 @@ abstract class AppDatabase: RoomDatabase() {
     abstract fun productsDao(): ProductsDao
     abstract fun cartDao(): CartDao
     abstract fun discountsDao(): DiscountsDao
+
+    companion object {
+        const val databaseName = "cabify.db"
+    }
 }

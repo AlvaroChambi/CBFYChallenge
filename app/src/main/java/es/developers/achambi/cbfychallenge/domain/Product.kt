@@ -6,8 +6,8 @@ import es.developers.achambi.cbfychallenge.presentation.ParcelableHelper
 import java.math.BigDecimal
 
 enum class Discount {
-    TWO_FOR_ONE,
-    THREE_MORE,
+    TWOFORONE,
+    THREEORMORE,
     NONE
 }
 
@@ -46,4 +46,13 @@ data class Product( val code: String,
 }
 
 data class CartProduct( val product: Product,
-                        val quantity: Int)
+                        val quantity: Int,
+                        val totalPrice: BigDecimal)
+
+data class CartProducts(val cartProducts: List<CartProduct>,
+                        val baseTotal: BigDecimal,
+                        val total: BigDecimal,
+                        val canApplyTwoForOne: Boolean,
+                        val canApplyThreeOrMore: Boolean,
+                        val twoForOnePrice: BigDecimal,
+                        val threeOrMorePrice: BigDecimal)

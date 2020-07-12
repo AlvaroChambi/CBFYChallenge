@@ -6,10 +6,7 @@ import es.developers.achambi.cbfychallenge.R
 import es.developers.achambi.cbfychallenge.domain.Discount
 import es.developers.achambi.cbfychallenge.domain.Product
 import es.developers.achambi.cbfychallenge.domain.ProductsUseCase
-import es.developers.achambi.cbfychallenge.presentation.BaseExecutor
-import es.developers.achambi.cbfychallenge.presentation.Presenter
-import es.developers.achambi.cbfychallenge.presentation.Request
-import es.developers.achambi.cbfychallenge.presentation.SuccessHandler
+import es.developers.achambi.cbfychallenge.presentation.*
 import javax.inject.Inject
 
 class ProductsPresenter (screen: ProductsScreen, lifecycle: Lifecycle,
@@ -32,6 +29,11 @@ class ProductsPresenter (screen: ProductsScreen, lifecycle: Lifecycle,
                 products = response
                 screen.showProducts(presentationBuilder.build(response))
             }
+        }, object :
+            ErrorHandler {
+            override fun onError() {
+                screen.showError()
+            }
         })
     }
 
@@ -53,8 +55,8 @@ class PresentationBuilder@Inject constructor(private val context: Context) {
 
     fun build(product: Product): ProductPresentation {
         val discountResource = when(product.discount) {
-            Discount.TWO_FOR_ONE -> R.drawable.discount_2_for_1_image
-            Discount.THREE_MORE -> R.drawable.discount_3_more_image
+            Discount.TWOFORONE -> R.drawable.discount_2_for_1_image
+            Discount.THREEORMORE -> R.drawable.discount_3_more_image
             Discount.NONE -> 0
         }
         return ProductPresentation(

@@ -70,11 +70,16 @@ class ProductsFragment: BaseFragment(),
     override fun navigateToDetails(product: Product) {
         startActivity(activity?.let { ProductDetailActivity.getStartIntent(it, product) })
     }
+
+    override fun showError() {
+
+    }
 }
 
 interface ProductsScreen: Screen {
     fun showProducts(products: List<ProductPresentation>)
     fun navigateToDetails(product: Product)
+    fun showError()
 }
 
 interface ProductsAdapterListener {

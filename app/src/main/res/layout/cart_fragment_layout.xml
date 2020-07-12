@@ -49,12 +49,12 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="56dp"
                 android:text="TOTAL"
-                app:layout_constraintBottom_toBottomOf="@+id/textView4"
+                app:layout_constraintBottom_toBottomOf="@+id/cart_total_price_text"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/textView4" />
+                app:layout_constraintTop_toTopOf="@+id/cart_total_price_text" />
 
             <TextView
-                android:id="@+id/textView4"
+                android:id="@+id/cart_total_price_text"
                 style="@style/H2Headline"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -70,13 +70,13 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
                 android:text="Subtotal"
-                app:layout_constraintBottom_toBottomOf="@+id/textView6"
-                app:layout_constraintEnd_toStartOf="@+id/textView6"
+                app:layout_constraintBottom_toBottomOf="@+id/cart_subtotal_price_text"
+                app:layout_constraintEnd_toStartOf="@+id/cart_subtotal_price_text"
                 app:layout_constraintStart_toStartOf="@+id/textView3"
-                app:layout_constraintTop_toTopOf="@+id/textView6" />
+                app:layout_constraintTop_toTopOf="@+id/cart_subtotal_price_text" />
 
             <TextView
-                android:id="@+id/textView6"
+                android:id="@+id/cart_subtotal_price_text"
                 style="@style/Body1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -84,7 +84,7 @@
                 android:layout_marginEnd="16dp"
                 android:text="240€"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView4" />
+                app:layout_constraintTop_toBottomOf="@+id/cart_total_price_text" />
 
             <TextView
                 android:id="@+id/textView7"
@@ -94,7 +94,7 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="16dp"
                 android:text="3+ discount"
-                app:layout_constraintEnd_toStartOf="@+id/textView9"
+                app:layout_constraintEnd_toStartOf="@+id/cart_discount_two_text"
                 app:layout_constraintStart_toStartOf="@+id/textView5"
                 app:layout_constraintTop_toBottomOf="@+id/textView5" />
 
@@ -106,12 +106,12 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="16dp"
                 android:text="2x1 discount"
-                app:layout_constraintEnd_toStartOf="@+id/textView10"
+                app:layout_constraintEnd_toStartOf="@+id/cart_discount_two_text"
                 app:layout_constraintStart_toStartOf="@+id/textView7"
                 app:layout_constraintTop_toBottomOf="@+id/textView7" />
 
             <TextView
-                android:id="@+id/textView9"
+                android:id="@+id/cart_discount_three_text"
                 style="@style/Body1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -119,18 +119,18 @@
                 android:layout_marginEnd="16dp"
                 android:text="- 12€"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView6" />
+                app:layout_constraintTop_toBottomOf="@+id/cart_subtotal_price_text" />
 
             <TextView
-                android:id="@+id/textView10"
+                android:id="@+id/cart_discount_two_text"
                 style="@style/Body1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
                 android:layout_marginEnd="16dp"
                 android:text="- 8€"
+                app:layout_constraintBottom_toBottomOf="@+id/textView8"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView9" />
+                app:layout_constraintTop_toTopOf="@+id/textView8" />
 
             <TextView
                 android:id="@+id/textView11"
@@ -183,6 +183,30 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/textView14"
                 app:layout_constraintTop_toBottomOf="@+id/textView12" />
+
+            <androidx.constraintlayout.widget.Group
+                android:id="@+id/twoforone_discount_group"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:constraint_referenced_ids="textView14,textView15" />
+
+            <androidx.constraintlayout.widget.Group
+                android:id="@+id/threeormore_discount_group"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:constraint_referenced_ids="textView11,textView12" />
+
+            <androidx.constraintlayout.widget.Group
+                android:id="@+id/twoforone_price_group"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:constraint_referenced_ids="textView8,cart_discount_two_text" />
+
+            <androidx.constraintlayout.widget.Group
+                android:id="@+id/threeormore_price_group"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:constraint_referenced_ids="textView7,cart_discount_two_text" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 
