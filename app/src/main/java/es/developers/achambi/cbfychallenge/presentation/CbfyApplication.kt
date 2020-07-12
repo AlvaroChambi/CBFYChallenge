@@ -115,6 +115,7 @@ class CbfyApplication: Application() {
 
     override fun onCreate() {
         super.onCreate()
+        //TODO: Add populated database file
         graph.inject(this)
         val preferences = getSharedPreferences("default", Context.MODE_PRIVATE)
         if(preferences.getBoolean("FIRST", true)) {

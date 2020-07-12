@@ -17,7 +17,6 @@ import es.developers.achambi.cbfychallenge.presentation.products.PresentationBui
 import es.developers.achambi.cbfychallenge.presentation.products.ProductPresentation
 import kotlinx.android.synthetic.main.cart_fragment_layout.*
 import kotlinx.android.synthetic.main.cart_item_layout.view.*
-import kotlinx.android.synthetic.main.product_item_layout.view.*
 import javax.inject.Inject
 
 class CartFragment: BaseFragment(), CartScreen {

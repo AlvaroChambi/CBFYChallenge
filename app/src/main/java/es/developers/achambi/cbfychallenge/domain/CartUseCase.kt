@@ -12,6 +12,18 @@ class CartUseCase@Inject constructor() {
         items.add( CartProduct(
             Product("TSHIRT", "cabify t-shirt", BigDecimal("12"), Discount.THREE_MORE),
             2 ))
+        items.add( CartProduct(
+            Product("TSHIRT", "cabify t-shirt", BigDecimal("12"), Discount.THREE_MORE),
+            2 ))
+        items.add( CartProduct(
+            Product("TSHIRT", "cabify t-shirt", BigDecimal("12"), Discount.THREE_MORE),
+            2 ))
+        items.add( CartProduct(
+            Product("TSHIRT", "cabify t-shirt", BigDecimal("12"), Discount.THREE_MORE),
+            2 ))
+        items.add( CartProduct(
+            Product("TSHIRT", "cabify t-shirt", BigDecimal("12"), Discount.THREE_MORE),
+            2 ))
         return items
     }
 }
