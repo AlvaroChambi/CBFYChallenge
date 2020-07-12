@@ -4,5 +4,5 @@
 
     <string name="discount_two_for_one_text">Buy 2 and pay just 1!</string>
     <string name="discount_three_or_more_text">Buy 3 or more of this product to get a discount! </string>
-    <string name="quantity_format">x %1$s</string>
+    <string name="cart_item_quantity_format">%1$s items</string> <!--TODO plural-->
 </resources>

@@ -89,7 +89,7 @@ class CartItemBuilder@Inject constructor
         val list = ArrayList<CartItemPresentation>()
         items.forEach {
             list.add( CartItemPresentation( productBuilder.build(it.product),
-                context.getString(R.string.quantity_format, it.quantity.toString())) )
+                it.quantity.toString()) )
         }
         return list
     }

@@ -1,7 +1,6 @@
 package es.developers.achambi.cbfychallenge.presentation.product
 
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import androidx.appcompat.app.AppCompatActivity
 import es.developers.achambi.cbfychallenge.R

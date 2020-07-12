@@ -50,4 +50,10 @@
         <item name="android:textSize">14sp</item>
         <item name="android:textAllCaps">true</item>
     </style>
+    <style name="Overline">
+        <item name="android:fontFamily">@font/rubik</item>
+        <item name="android:textColor">@color/colorPrimaryDark</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textAllCaps">true</item>
+    </style>
 </resources>
