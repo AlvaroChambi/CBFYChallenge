@@ -1,6 +1,8 @@
 package es.developers.achambi.cbfychallenge.presentation.products
 
 import android.content.Context
+import android.os.Parcel
+import android.os.Parcelable
 import androidx.lifecycle.Lifecycle
 import es.developers.achambi.cbfychallenge.R
 import es.developers.achambi.cbfychallenge.domain.Discount
@@ -17,7 +19,7 @@ class ProductsPresenter (screen: ProductsScreen, lifecycle: Lifecycle,
     : Presenter<ProductsScreen>(screen, lifecycle, executor) {
     private lateinit var products: List<Product>
 
-    fun onViewCreated() {
+    fun onDataSetup() {
         perform(object :
             Request<List<Product>> {
             override fun perform(): List<Product> {
@@ -68,8 +70,36 @@ class PresentationBuilder@Inject constructor(private val context: Context) {
     }
 }
 
-class ProductPresentation(val code: String,
+data class ProductPresentation(val code: String,
                           val name: String,
                           val price: String,
-                          val discountImage: Int)
+                          val discountImage: Int): Parcelable {
+    constructor(parcel: Parcel) : this(
+        parcel.readString().toString(),
+        parcel.readString().toString(),
+        parcel.readString().toString(),
+        parcel.readInt()
+    )
+
+    override fun writeToParcel(parcel: Parcel, flags: Int) {
+        parcel.writeString(code)
+        parcel.writeString(name)
+        parcel.writeString(price)
+        parcel.writeInt(discountImage)
+    }
+
+    override fun describeContents(): Int {
+        return 0
+    }
+
+    companion object CREATOR : Parcelable.Creator<ProductPresentation> {
+        override fun createFromParcel(parcel: Parcel): ProductPresentation {
+            return ProductPresentation(parcel)
+        }
+
+        override fun newArray(size: Int): Array<ProductPresentation?> {
+            return arrayOfNulls(size)
+        }
+    }
+}
 

@@ -55,6 +55,9 @@ class ProductDetailFragment: BaseFragment(), ProductDetailScreen {
         presenter.onViewCreated(product)
     }
 
+    override fun onViewSetup(view: View) {
+    }
+
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
         inflater.inflate(R.menu.product_detail_menu, menu)

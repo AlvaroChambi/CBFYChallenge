@@ -1,7 +1,6 @@
 package es.developers.achambi.cbfychallenge.presentation.products
 
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -15,7 +14,6 @@ import es.developers.achambi.cbfychallenge.presentation.ProductPresenterFactory
 import es.developers.achambi.cbfychallenge.presentation.Screen
 import es.developers.achambi.cbfychallenge.presentation.cart.CartActivity
 import es.developers.achambi.cbfychallenge.presentation.product.ProductDetailActivity
-import kotlinx.android.synthetic.main.product_details_layout.*
 import kotlinx.android.synthetic.main.product_item_layout.view.*
 import kotlinx.android.synthetic.main.products_layout.*
 import javax.inject.Inject
@@ -27,6 +25,7 @@ class ProductsFragment: BaseFragment(),
     lateinit var presenter: ProductsPresenter
     private lateinit var adapter: ProductsAdapter
     companion object {
+        const val PRODUCTS_SAVED_INSTANCE_KEY = "products_saved_instance_key"
         fun newInstance(): Fragment {
             return ProductsFragment()
         }
@@ -34,32 +33,36 @@ class ProductsFragment: BaseFragment(),
     override val layoutResource: Int
         get() = R.layout.products_layout
 
-    //lifecycle only instantiate when the fragment is created, shared lifecycle
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
         (activity?.application as CbfyApplication).graph.inject(this)
         presenter = presenterFactory.createPresenter(this, lifecycle)
+        adapter = ProductsAdapter(listener = this)
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    override fun onViewSetup(view: View) {
         (activity as AppCompatActivity).setSupportActionBar(toolbar)
         product_recycler_view.layoutManager = LinearLayoutManager(context)
-        presenter.onViewCreated()
+        product_recycler_view.adapter = adapter
+    }
+
+    override fun onDataSetup() {
+        super.onDataSetup()
+        presenter.onDataSetup()
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
         inflater.inflate(R.menu.product_detail_menu, menu)
+        //TODO: Fix, it'll only work on the current implementation, adding more toolbar actions will break it
         menu.getItem(0).actionView.setOnClickListener {
             startActivity(activity?.let { it1 -> CartActivity.getStartIntent(it1)})
         }
     }
 
     override fun showProducts(products: List<ProductPresentation>) {
-        adapter = ProductsAdapter(products, this)
-        product_recycler_view.adapter = adapter
+        adapter.list = ArrayList(products)
         adapter.notifyDataSetChanged()
     }
 
@@ -73,6 +76,17 @@ class ProductsFragment: BaseFragment(),
 
     override fun showError() {
 
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putParcelableArrayList(PRODUCTS_SAVED_INSTANCE_KEY, adapter.list)
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+        adapter.list = savedInstanceState.getParcelableArrayList(PRODUCTS_SAVED_INSTANCE_KEY)!!
+        adapter.notifyDataSetChanged()
     }
 }
 
@@ -88,7 +102,7 @@ interface ProductsAdapterListener {
 
 class ProductsHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
 
-class ProductsAdapter(private val list: List<ProductPresentation>,
+class ProductsAdapter(var list: ArrayList<ProductPresentation> = ArrayList(),
                       private val listener: ProductsAdapterListener)
     : RecyclerView.Adapter<ProductsHolder>() {
 

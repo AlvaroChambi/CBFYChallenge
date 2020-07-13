@@ -46,6 +46,10 @@ class CartFragment: BaseFragment(), CartScreen, CartItemListener {
         presenter.onViewCreated()
     }
 
+    override fun onViewSetup(view: View) {
+
+    }
+
     override fun showCartItems(cartPresentation: CartPresentation) {
         adapter = ItemsAdapter(cartPresentation.items, this)
         cart_item_recycler.adapter = adapter
