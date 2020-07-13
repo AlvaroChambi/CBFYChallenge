@@ -2,6 +2,7 @@ package es.developers.achambi.cbfychallenge.presentation.product
 
 import android.os.Bundle
 import android.view.*
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import es.developers.achambi.cbfychallenge.R
@@ -12,6 +13,7 @@ import kotlinx.android.synthetic.main.product_details_layout.*
 import javax.inject.Inject
 
 class ProductDetailFragment: BaseFragment(), ProductDetailScreen {
+    private lateinit var cartBadge: TextView
     companion object {
         private val PRODUCT_KEY = "PRODUCT_KEY"
         fun newInstance(bundle: Bundle?): ProductDetailFragment {
@@ -38,24 +40,25 @@ class ProductDetailFragment: BaseFragment(), ProductDetailScreen {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
+        (activity?.application as CbfyApplication).graph.inject(this)
         //will always be available, there's no other way to invoke this fragment
         product = arguments?.getParcelable(PRODUCT_KEY)!!
-        (activity?.application as CbfyApplication).graph.inject(this)
         presenter = presenterFactory.createPresenter(this, lifecycle)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        (activity as AppCompatActivity).setSupportActionBar(products_toolbar)
+        products_toolbar.setNavigationIcon(R.drawable.baseline_keyboard_backspace_24)
+        products_toolbar.setNavigationOnClickListener { activity?.onBackPressed() }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        (activity as AppCompatActivity).setSupportActionBar(products_toolbar)
-        products_toolbar.setNavigationIcon(R.drawable.baseline_keyboard_backspace_24)
-        products_toolbar.setNavigationOnClickListener { activity?.onBackPressed() }
         product_detail_cart_button.setOnClickListener {
             presenter.onAddToCart(1)
         }
         presenter.onViewCreated(product)
-    }
-
-    override fun onViewSetup(view: View) {
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -64,6 +67,8 @@ class ProductDetailFragment: BaseFragment(), ProductDetailScreen {
         menu.getItem(0).actionView.setOnClickListener {
             startActivity(activity?.let { it1 -> CartActivity.getStartIntent(it1) })
         }
+        cartBadge = menu.getItem(0).actionView.findViewById(R.id.cart_badge)
+        presenter.onOptionsMenuCreated()
     }
 
     override fun showProduct(presentation: ProductDetailPresentation) {
@@ -82,12 +87,17 @@ class ProductDetailFragment: BaseFragment(), ProductDetailScreen {
         Toast.makeText(activity, "Something failed :(. Please try again.", Toast.LENGTH_LONG)
             .show()
     }
+
+    override fun showCartItemQuantity(quantity:Int) {
+        cartBadge.text = quantity.toString()
+    }
 }
 
 interface ProductDetailScreen: Screen {
     fun showProduct(presentation: ProductDetailPresentation)
     fun showAddToCartSuccess()
     fun showAddToCartError()
+    fun showCartItemQuantity(quantity:Int)
 }
 
 class ProductDetailPresentation(val name: String,

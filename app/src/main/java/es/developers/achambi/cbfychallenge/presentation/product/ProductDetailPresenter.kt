@@ -33,12 +33,29 @@ class ProductDetailPresenter(screen: ProductDetailScreen,
         }, object : SuccessHandler<Any> {
             override fun onSuccess(response: Any) {
                 screen.showAddToCartSuccess()
+                getCartItemsNumber()
             }
         }, object : ErrorHandler {
             override fun onError() {
                 screen.showAddToCartError()
             }
         })
+    }
+
+    private fun getCartItemsNumber() {
+        perform( object :Request<Int> {
+            override fun perform(): Int {
+                return cartUseCase.getCartItemsCount()
+            }
+        }, object : SuccessHandler<Int> {
+            override fun onSuccess(response: Int) {
+                screen.showCartItemQuantity(response)
+            }
+        })
+    }
+
+    fun onOptionsMenuCreated() {
+        getCartItemsNumber()
     }
 }
 

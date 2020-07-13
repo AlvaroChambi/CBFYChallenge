@@ -4,9 +4,18 @@ import es.developers.achambi.cbfychallenge.data.Repository
 import es.developers.achambi.cbfychallenge.data.database.CartProductEntity
 import java.math.BigDecimal
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class CartUseCase@Inject constructor(private val repository: Repository) {
     private var cartProducts: CartProducts? = null
+    fun getCartItems(): CartProducts {
+        if(cartProducts == null) {
+            return fetchCartItems()
+        } else {
+            return cartProducts!!
+        }
+    }
     //TODO cleanup and test
     //TODO discounts should be modeled as list, this solution won't scale well
     fun fetchCartItems(): CartProducts {
@@ -18,6 +27,7 @@ class CartUseCase@Inject constructor(private val repository: Repository) {
         var canApplyThreeOrMore = false
         var twoForOnePrice = BigDecimal(0)
         var threeOrMorePrice = BigDecimal(0)
+        var totalQuantity = 0
         items.forEach {
             val price = BigDecimal(it.price)
             val discount = Discount.valueOf(it.code)
@@ -26,6 +36,7 @@ class CartUseCase@Inject constructor(private val repository: Repository) {
             val detailedPrice = price.multiply(BigDecimal(it.quantity))
             var currentTwoPrice = BigDecimal(0)
             var currentThreePrice = BigDecimal(0)
+            totalQuantity += it.quantity
             when(discount) {
                 Discount.TWOFORONE -> {
                     //rounded down towards zero
@@ -50,8 +61,13 @@ class CartUseCase@Inject constructor(private val repository: Repository) {
         }
         totalDiscount = totalDiscount.add(twoForOnePrice).add(threeOrMorePrice)
         cartProducts = CartProducts(result, baseTotal, baseTotal.subtract(totalDiscount), canApplyTwoForOne,
-        canApplyThreeOrMore, twoForOnePrice, threeOrMorePrice)
+        canApplyThreeOrMore, twoForOnePrice, threeOrMorePrice, totalQuantity)
         return cartProducts!!
+    }
+
+    fun getCartItemsCount(): Int {
+        val products = getCartItems()
+        return products.totalQuantity
     }
 
     @Throws

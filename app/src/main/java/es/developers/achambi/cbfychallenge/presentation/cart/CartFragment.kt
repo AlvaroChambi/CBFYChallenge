@@ -1,5 +1,6 @@
 package es.developers.achambi.cbfychallenge.presentation.cart
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -45,11 +46,6 @@ class CartFragment: BaseFragment(), CartScreen, CartItemListener {
         cart_item_recycler.layoutManager = LinearLayoutManager(context)
         presenter.onViewCreated()
     }
-
-    override fun onViewSetup(view: View) {
-
-    }
-
     override fun showCartItems(cartPresentation: CartPresentation) {
         adapter = ItemsAdapter(cartPresentation.items, this)
         cart_item_recycler.adapter = adapter
@@ -66,7 +62,7 @@ class CartFragment: BaseFragment(), CartScreen, CartItemListener {
     }
 
     override fun showUpdateError() {
-        Toast.makeText(activity, "Something failed :(. Please try again.", Toast.LENGTH_LONG)
+        Toast.makeText(activity, R.string.base_error_message_text, Toast.LENGTH_LONG)
             .show()
     }
 
@@ -145,22 +141,25 @@ val total: String, val showTwoforOneInfo: Int, val showThreeOrMoreInfo: Int,
 val showTwoForOneValue: Int, val showThreeOrMoreValue: Int,
 val twoForOneDiscount: String, val threeOrMoreDiscount: String)
 
-class CartItemBuilder@Inject constructor( private val productBuilder: PresentationBuilder) {
+class CartItemBuilder@Inject constructor( private val context: Context,
+    private val productBuilder: PresentationBuilder) {
     fun build(items: List<CartProduct>): List<CartItemPresentation> {
         val list = ArrayList<CartItemPresentation>()
         items.forEach {
             list.add( CartItemPresentation( it.id, productBuilder.build(it.product),
-                it.quantity.toString(), it.totalPrice.toString()) )
+                it.quantity.toString(),
+                context.getString(R.string.price_format, it.totalPrice.toString())) )
         }
         return list
     }
 }
 
-class CartPresentationBuilder@Inject constructor(private val itemBuilder: CartItemBuilder) {
+class CartPresentationBuilder@Inject constructor(private val context: Context,
+                                                 private val itemBuilder: CartItemBuilder) {
     fun build(cartProducts: CartProducts): CartPresentation {
         val items = itemBuilder.build(cartProducts.cartProducts)
-        val total = cartProducts.total.toString()
-        val subtotal = cartProducts.baseTotal.toString()
+        val total = context.getString(R.string.price_format, cartProducts.total.toString())
+        val subtotal = context.getString(R.string.price_format, cartProducts.baseTotal.toString())
         var showTwoforOneInfo = View.GONE
         var showTwoForOneValue = View.GONE
         var showThreeOrMoreInfo = View.GONE
@@ -183,8 +182,10 @@ class CartPresentationBuilder@Inject constructor(private val itemBuilder: CartIt
         }
 
         return CartPresentation(items, subtotal, total, showTwoforOneInfo, showThreeOrMoreInfo,
-            showTwoForOneValue, showThreeOrMoreValue, cartProducts.twoForOnePrice.toString(),
-            cartProducts.threeOrMorePrice.toString())
+            showTwoForOneValue,
+            showThreeOrMoreValue,
+            context.getString(R.string.discount_price_format, cartProducts.twoForOnePrice.toString()),
+            context.getString(R.string.discount_price_format,cartProducts.threeOrMorePrice.toString()))
     }
 
 }

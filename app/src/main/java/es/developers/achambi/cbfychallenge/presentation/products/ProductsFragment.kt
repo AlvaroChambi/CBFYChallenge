@@ -2,6 +2,8 @@ package es.developers.achambi.cbfychallenge.presentation.products
 
 import android.os.Bundle
 import android.view.*
+import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -14,6 +16,7 @@ import es.developers.achambi.cbfychallenge.presentation.ProductPresenterFactory
 import es.developers.achambi.cbfychallenge.presentation.Screen
 import es.developers.achambi.cbfychallenge.presentation.cart.CartActivity
 import es.developers.achambi.cbfychallenge.presentation.product.ProductDetailActivity
+import kotlinx.android.synthetic.main.cart_action_item_layout.*
 import kotlinx.android.synthetic.main.product_item_layout.view.*
 import kotlinx.android.synthetic.main.products_layout.*
 import javax.inject.Inject
@@ -23,6 +26,7 @@ class ProductsFragment: BaseFragment(),
     @Inject
     lateinit var presenterFactory: ProductPresenterFactory
     lateinit var presenter: ProductsPresenter
+    private lateinit var cartBadge: TextView
     private lateinit var adapter: ProductsAdapter
     companion object {
         const val PRODUCTS_SAVED_INSTANCE_KEY = "products_saved_instance_key"
@@ -41,24 +45,30 @@ class ProductsFragment: BaseFragment(),
         adapter = ProductsAdapter(listener = this)
     }
 
-    override fun onViewSetup(view: View) {
-        (activity as AppCompatActivity).setSupportActionBar(toolbar)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
         product_recycler_view.layoutManager = LinearLayoutManager(context)
         product_recycler_view.adapter = adapter
+        if(savedInstanceState == null) {
+            presenter.onDataSetup()
+        }
     }
 
-    override fun onDataSetup() {
-        super.onDataSetup()
-        presenter.onDataSetup()
+    override fun onResume() {
+        super.onResume()
+        (activity as AppCompatActivity).setSupportActionBar(toolbar)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
         inflater.inflate(R.menu.product_detail_menu, menu)
-        //TODO: Fix, it'll only work on the current implementation, adding more toolbar actions will break it
+        //TODO: Fix, it'll only work with the current implementation, adding more toolbar actions will break it
         menu.getItem(0).actionView.setOnClickListener {
             startActivity(activity?.let { it1 -> CartActivity.getStartIntent(it1)})
         }
+        cartBadge = menu.getItem(0).actionView.findViewById(R.id.cart_badge)
+        presenter.onOptionsMenuCreated()
     }
 
     override fun showProducts(products: List<ProductPresentation>) {
@@ -75,7 +85,12 @@ class ProductsFragment: BaseFragment(),
     }
 
     override fun showError() {
+        Toast.makeText(context,R.string.base_error_message_text, Toast.LENGTH_LONG)
+            .show()
+    }
 
+    override fun showCartItemQuantity(quantity: Int) {
+        cartBadge.text = quantity.toString()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -94,6 +109,7 @@ interface ProductsScreen: Screen {
     fun showProducts(products: List<ProductPresentation>)
     fun navigateToDetails(product: Product)
     fun showError()
+    fun showCartItemQuantity(quantity: Int)
 }
 
 interface ProductsAdapterListener {

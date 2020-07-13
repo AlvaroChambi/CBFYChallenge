@@ -50,7 +50,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="56dp"
-                android:text="TOTAL"
+                android:text="@string/cart_total_text"
                 app:layout_constraintBottom_toBottomOf="@+id/cart_total_price_text"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/cart_total_price_text" />
@@ -61,7 +61,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
-                android:text="230€"
+                tools:text="230€"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -72,7 +72,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="56dp"
                 android:layout_marginEnd="16dp"
-                android:text="Subtotal"
+                android:text="@string/cart_subtotal_text"
                 app:layout_constraintBottom_toBottomOf="@+id/cart_subtotal_price_text"
                 app:layout_constraintEnd_toStartOf="@+id/cart_subtotal_price_text"
                 app:layout_constraintStart_toStartOf="parent"
@@ -85,7 +85,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
-                android:text="240€"
+                tools:text="240€"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/cart_total_price_text" />
 
@@ -97,7 +97,7 @@
                 android:layout_marginStart="56dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="16dp"
-                android:text="3+ discount"
+                android:text="@string/cart_three_discount_text"
                 app:layout_constraintEnd_toStartOf="@+id/cart_discount_two_text"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView5" />
@@ -110,7 +110,7 @@
                 android:layout_marginStart="56dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="16dp"
-                android:text="2x1 discount"
+                android:text="@string/cart_two_discount_text"
                 app:layout_constraintEnd_toStartOf="@+id/cart_discount_two_text"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView7" />
@@ -122,7 +122,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="16dp"
-                android:text="- 12€"
+                tools:text="- 12€"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/cart_subtotal_price_text" />
 
@@ -132,7 +132,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
-                android:text="- 8€"
+                tools:text="- 8€"
                 app:layout_constraintBottom_toBottomOf="@+id/textView8"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/textView8" />
@@ -145,7 +145,7 @@
                 android:layout_marginTop="8dp"
                 android:background="@color/colorAccent"
                 android:padding="2dp"
-                android:text="discount"
+                android:text="@string/cart_discount_tag_text"
                 android:textColor="@color/default_background"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
@@ -160,7 +160,7 @@
                 android:layout_marginBottom="8dp"
                 android:background="@color/colorAccent"
                 android:padding="2dp"
-                android:text="discount"
+                android:text="@string/cart_discount_tag_text"
                 android:textColor="@color/default_background"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -174,7 +174,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
-                android:text="Buy 3 or more T-shirts to get a discount"
+                android:text="@string/cart_discount_three_description_text"
                 app:layout_constraintBottom_toBottomOf="@+id/textView11"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/textView11"
@@ -187,7 +187,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
-                android:text="Buy 2 vouchers and get one for free"
+                android:text="@string/cart_discount_two_description_text"
                 app:layout_constraintBottom_toBottomOf="@+id/textView14"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/textView14"
@@ -225,7 +225,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="@color/colorAccent"
-        android:text="Purchase"
+        android:text="@string/cart_purchase_button_text"
         android:gravity="center"
         android:padding="16dp"
         style="@style/Button"
@@ -240,6 +240,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.5" />
+        app:layout_constraintGuide_percent="0.6" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

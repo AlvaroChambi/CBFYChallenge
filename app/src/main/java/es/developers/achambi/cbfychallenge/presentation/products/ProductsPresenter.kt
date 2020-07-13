@@ -5,6 +5,7 @@ import android.os.Parcel
 import android.os.Parcelable
 import androidx.lifecycle.Lifecycle
 import es.developers.achambi.cbfychallenge.R
+import es.developers.achambi.cbfychallenge.domain.CartUseCase
 import es.developers.achambi.cbfychallenge.domain.Discount
 import es.developers.achambi.cbfychallenge.domain.Product
 import es.developers.achambi.cbfychallenge.domain.ProductsUseCase
@@ -14,6 +15,7 @@ import javax.inject.Inject
 class ProductsPresenter (screen: ProductsScreen, lifecycle: Lifecycle,
                          executor: BaseExecutor,
                          private val useCase: ProductsUseCase,
+                         private val cartUseCase: CartUseCase,
                          private val presentationBuilder: PresentationBuilder
 )
     : Presenter<ProductsScreen>(screen, lifecycle, executor) {
@@ -35,6 +37,18 @@ class ProductsPresenter (screen: ProductsScreen, lifecycle: Lifecycle,
             ErrorHandler {
             override fun onError() {
                 screen.showError()
+            }
+        })
+    }
+
+    fun onOptionsMenuCreated() {
+        perform( object :Request<Int> {
+            override fun perform(): Int {
+                return cartUseCase.getCartItemsCount()
+            }
+        }, object : SuccessHandler<Int> {
+            override fun onSuccess(response: Int) {
+                screen.showCartItemQuantity(response)
             }
         })
     }

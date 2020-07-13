@@ -56,4 +56,5 @@ data class CartProducts(val cartProducts: List<CartProduct>,
                         val canApplyTwoForOne: Boolean,
                         val canApplyThreeOrMore: Boolean,
                         val twoForOnePrice: BigDecimal,
-                        val threeOrMorePrice: BigDecimal)
+                        val threeOrMorePrice: BigDecimal,
+                        val totalQuantity: Int)

@@ -3,7 +3,9 @@ package es.developers.achambi.cbfychallenge.domain
 import es.developers.achambi.cbfychallenge.data.Repository
 import java.math.BigDecimal
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class ProductsUseCase @Inject constructor(private val repository: Repository) {
     //Fetch products list and map to domain model
     fun fetchProducts(): List<Product> {

@@ -24,14 +24,15 @@ import es.developers.achambi.cbfychallenge.presentation.products.ProductsScreen
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Inject
+import javax.inject.Scope
 import javax.inject.Singleton
 
 @Singleton
 @Component(modules = [ServiceModule::class, RepositoryModule::class])
-interface ComponentGraph {
+interface AppComponentGraph {
     @Component.Factory
     interface Factory {
-        fun create(@BindsInstance context: Context): ComponentGraph
+        fun create(@BindsInstance context: Context): AppComponentGraph
     }
     fun inject(fragment: ProductsFragment)
     fun inject(fragment: ProductDetailFragment)
@@ -41,6 +42,7 @@ interface ComponentGraph {
 
 class ProductPresenterFactory @Inject constructor(private val executor: Executor,
                                                   private val useCase: ProductsUseCase,
+                                                  private val cartUseCase: CartUseCase,
                                                   private val builder: PresentationBuilder
 ) {
     fun createPresenter(screen: ProductsScreen, lifecycle: Lifecycle): ProductsPresenter {
@@ -49,6 +51,7 @@ class ProductPresenterFactory @Inject constructor(private val executor: Executor
             lifecycle,
             executor,
             useCase,
+            cartUseCase,
             builder
         )
     }
@@ -106,8 +109,8 @@ class ServiceModule {
 class CbfyApplication: Application() {
     @Inject
     lateinit var database: AppDatabase
-    val graph: ComponentGraph by lazy {
-        DaggerComponentGraph.factory().create(this)
+    val graph: AppComponentGraph by lazy {
+        DaggerAppComponentGraph.factory().create(this)
     }
 
     override fun onCreate() {
