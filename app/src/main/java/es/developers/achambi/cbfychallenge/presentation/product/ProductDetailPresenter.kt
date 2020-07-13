@@ -6,6 +6,7 @@ import es.developers.achambi.cbfychallenge.R
 import es.developers.achambi.cbfychallenge.domain.CartUseCase
 import es.developers.achambi.cbfychallenge.domain.Discount
 import es.developers.achambi.cbfychallenge.domain.Product
+import es.developers.achambi.cbfychallenge.domain.ProductsUseCase
 import es.developers.achambi.cbfychallenge.presentation.*
 import es.developers.achambi.cbfychallenge.presentation.products.PresentationBuilder
 import javax.inject.Inject
@@ -14,21 +15,30 @@ class ProductDetailPresenter(screen: ProductDetailScreen,
                              lifecycle: Lifecycle,
                              executor: Executor,
                              private val presentationBuilder: DetailsPresentationBuilder,
+                             private val productsUseCase: ProductsUseCase,
                              private val cartUseCase: CartUseCase)
     : Presenter<ProductDetailScreen>(screen, lifecycle, executor) {
 
-    //TODO cache on use case!
-    private lateinit var product: Product
-
-    fun onViewCreated(product: Product) {
-        this.product = product
-        screen.showProduct(presentationBuilder.build(product))
+    fun onViewCreated(product: String) {
+        perform(object : Request<Product> {
+            override fun perform(): Product {
+                return productsUseCase.fetchProduct(product)
+            }
+        }, object : SuccessHandler<Product> {
+            override fun onSuccess(response: Product) {
+                screen.showProduct(presentationBuilder.build(response))
+            }
+        }, object : ErrorHandler {
+            override fun onError() {
+                screen.showError()
+            }
+        })
     }
 
-    fun onAddToCart(quantity: Int) {
+    fun onAddToCart(productCode: String, quantity: Int) {
         perform( object : Request<Any> {
             override fun perform(): Any {
-                return cartUseCase.addtoCart(product.code, quantity)
+                return cartUseCase.addtoCart(productCode, quantity)
             }
         }, object : SuccessHandler<Any> {
             override fun onSuccess(response: Any) {

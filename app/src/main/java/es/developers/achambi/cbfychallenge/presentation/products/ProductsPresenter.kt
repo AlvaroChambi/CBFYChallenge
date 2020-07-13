@@ -19,7 +19,6 @@ class ProductsPresenter (screen: ProductsScreen, lifecycle: Lifecycle,
                          private val presentationBuilder: PresentationBuilder
 )
     : Presenter<ProductsScreen>(screen, lifecycle, executor) {
-    private lateinit var products: List<Product>
 
     fun onDataSetup() {
         perform(object :
@@ -30,7 +29,6 @@ class ProductsPresenter (screen: ProductsScreen, lifecycle: Lifecycle,
         }, object :
             SuccessHandler<List<Product>> {
             override fun onSuccess(response: List<Product>) {
-                products = response
                 screen.showProducts(presentationBuilder.build(response))
             }
         }, object :
@@ -53,14 +51,10 @@ class ProductsPresenter (screen: ProductsScreen, lifecycle: Lifecycle,
         })
     }
 
-    //TODO (move cache to use case, pass just id)
     fun productSelected(code: String) {
-        //TODO check if this make sense
-        screen.navigateToDetails(products.find { it.code == code }!!)
+        screen.navigateToDetails(code)
     }
 }
-
-
 
 class PresentationBuilder@Inject constructor(private val context: Context) {
     fun build(products: List<Product>): List<ProductPresentation> {

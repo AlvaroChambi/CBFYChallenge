@@ -7,14 +7,24 @@ import javax.inject.Singleton
 
 @Singleton
 class ProductsUseCase @Inject constructor(private val repository: Repository) {
+    private val products= ArrayList<Product>()
+
     //Fetch products list and map to domain model
     fun fetchProducts(): List<Product> {
-        val products = ArrayList<Product>()
-        repository.fetchProducts().forEach { product ->
-            products.add( Product( product.code, product.name, BigDecimal(product.price.toString()),
-            Discount.valueOf(product.discount)) )
+        if(products.isEmpty()) {
+            repository.fetchProducts().forEach { product ->
+                products.add( Product( product.code, product.name, BigDecimal(product.price.toString()),
+                    Discount.valueOf(product.discount)) )
+            }
         }
 
         return products
+    }
+
+    fun fetchProduct(code: String): Product {
+        if(products.isEmpty()) {
+            fetchProducts()
+        }
+        return products.find { code == it.code }!!
     }
 }

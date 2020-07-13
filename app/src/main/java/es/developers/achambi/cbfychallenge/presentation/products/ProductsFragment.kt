@@ -16,7 +16,6 @@ import es.developers.achambi.cbfychallenge.presentation.ProductPresenterFactory
 import es.developers.achambi.cbfychallenge.presentation.Screen
 import es.developers.achambi.cbfychallenge.presentation.cart.CartActivity
 import es.developers.achambi.cbfychallenge.presentation.product.ProductDetailActivity
-import kotlinx.android.synthetic.main.cart_action_item_layout.*
 import kotlinx.android.synthetic.main.product_item_layout.view.*
 import kotlinx.android.synthetic.main.products_layout.*
 import javax.inject.Inject
@@ -80,8 +79,8 @@ class ProductsFragment: BaseFragment(),
         presenter.productSelected(productCode)
     }
 
-    override fun navigateToDetails(product: Product) {
-        startActivity(activity?.let { ProductDetailActivity.getStartIntent(it, product) })
+    override fun navigateToDetails(productCode: String) {
+        startActivity(activity?.let { ProductDetailActivity.getStartIntent(it, productCode) })
     }
 
     override fun showError() {
@@ -107,7 +106,7 @@ class ProductsFragment: BaseFragment(),
 
 interface ProductsScreen: Screen {
     fun showProducts(products: List<ProductPresentation>)
-    fun navigateToDetails(product: Product)
+    fun navigateToDetails(productCode: String)
     fun showError()
     fun showCartItemQuantity(quantity: Int)
 }

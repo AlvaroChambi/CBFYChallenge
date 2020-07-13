@@ -9,9 +9,9 @@ import es.developers.achambi.cbfychallenge.presentation.BaseActivity
 
 class ProductDetailActivity: BaseActivity() {
     companion object {
-        fun getStartIntent(context: Context, product: Product): Intent {
+        fun getStartIntent(context: Context, productCode: String): Intent {
             val intent = Intent(context, ProductDetailActivity::class.java)
-            val args = ProductDetailFragment.buildArguments(product)
+            val args = ProductDetailFragment.buildArguments(productCode)
             intent.putExtra(BASE_ARGUMENTS, args)
             return intent
         }

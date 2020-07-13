@@ -22,9 +22,9 @@ class ProductDetailFragment: BaseFragment(), ProductDetailScreen {
             return fragment
         }
 
-        fun buildArguments(product: Product): Bundle {
+        fun buildArguments(product: String): Bundle {
             val bundle = Bundle()
-            bundle.putParcelable(PRODUCT_KEY, product)
+            bundle.putString(PRODUCT_KEY, product)
             return bundle
         }
     }
@@ -32,7 +32,7 @@ class ProductDetailFragment: BaseFragment(), ProductDetailScreen {
     override val layoutResource: Int
         get() = R.layout.product_details_layout
 
-    private lateinit var product: Product
+    private lateinit var productCode: String
     @Inject
     lateinit var presenterFactory: DetailsPresenterFactory
     private lateinit var presenter: ProductDetailPresenter
@@ -42,7 +42,7 @@ class ProductDetailFragment: BaseFragment(), ProductDetailScreen {
         setHasOptionsMenu(true)
         (activity?.application as CbfyApplication).graph.inject(this)
         //will always be available, there's no other way to invoke this fragment
-        product = arguments?.getParcelable(PRODUCT_KEY)!!
+        productCode = arguments?.getString(PRODUCT_KEY)!!
         presenter = presenterFactory.createPresenter(this, lifecycle)
     }
 
@@ -56,9 +56,9 @@ class ProductDetailFragment: BaseFragment(), ProductDetailScreen {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         product_detail_cart_button.setOnClickListener {
-            presenter.onAddToCart(1)
+            presenter.onAddToCart(productCode, 1)
         }
-        presenter.onViewCreated(product)
+        presenter.onViewCreated(productCode)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -79,17 +79,22 @@ class ProductDetailFragment: BaseFragment(), ProductDetailScreen {
     }
 
     override fun showAddToCartSuccess() {
-        Toast.makeText(activity, "Item successfully added to the cart", Toast.LENGTH_LONG)
+        Toast.makeText(activity, R.string.add_to_cart_success_text, Toast.LENGTH_LONG)
             .show()
     }
 
     override fun showAddToCartError() {
-        Toast.makeText(activity, "Something failed :(. Please try again.", Toast.LENGTH_LONG)
+        Toast.makeText(activity, R.string.base_error_message_text, Toast.LENGTH_LONG)
             .show()
     }
 
     override fun showCartItemQuantity(quantity:Int) {
         cartBadge.text = quantity.toString()
+    }
+
+    override fun showError() {
+        Toast.makeText(activity, R.string.base_error_message_text, Toast.LENGTH_LONG)
+            .show()
     }
 }
 
@@ -98,6 +103,7 @@ interface ProductDetailScreen: Screen {
     fun showAddToCartSuccess()
     fun showAddToCartError()
     fun showCartItemQuantity(quantity:Int)
+    fun showError()
 }
 
 class ProductDetailPresentation(val name: String,

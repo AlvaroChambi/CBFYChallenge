@@ -17,4 +17,5 @@
     <string name="discount_price_format">-%1$s €</string>
 
     <string name="base_error_message_text">Something went wrong, please try again later.</string>
+    <string name="add_to_cart_success_text">Item successfully added to the cart</string>
 </resources>
