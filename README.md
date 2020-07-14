@@ -52,8 +52,11 @@ Data from remote will be cached on the database, a cache invalidation policy bas
 
 ## Third party libraries
 Retrofit
+
 Dagger
+
 Room
 
-# Notes
-- Using the MVVM pattern, something based more on observables than observers, would have simplified showing data that is meant to be changed, like the cart products count. While the MVP observer pattern can solve the problem, using observables makes it trivial. With our current implementation going from MVP to MVVM should'nt be  affect much the project, the changes will limited to our presentation module.
+
+## Notes
+- Using the MVVM pattern, something based more on observables than observers, would have simplified showing data that is meant to be changed, like the cart products count. While the MVP observer pattern can solve the problem, using observables makes it trivial. With our current implementation going from MVP to MVVM shouldn't take long, changes will only concern the presentation layer.
