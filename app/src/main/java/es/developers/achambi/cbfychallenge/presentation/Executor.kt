@@ -30,7 +30,6 @@ class Executor private constructor(corePoolSize: Int, maximumPoolSize: Int, keep
     BaseExecutor {
 
     companion object {
-        //TODO why
         private const val KEEP_ALIVE_TIME: Long = 0
         private const val THREAD_NUMBERS = 4
         private val MAIN_HANDLER = Handler(Looper.getMainLooper())

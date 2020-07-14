@@ -16,7 +16,7 @@ class CartUseCase@Inject constructor(private val repository: Repository) {
             return cartProducts!!
         }
     }
-    //TODO cleanup and test
+    //TODO unit test
     //TODO discounts should be modeled as list, this solution won't scale well
     fun fetchCartItems(): CartProducts {
         val items =  repository.fetchCartProducts()

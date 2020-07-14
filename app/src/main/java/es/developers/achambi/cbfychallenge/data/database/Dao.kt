@@ -3,9 +3,7 @@ package es.developers.achambi.cbfychallenge.data.database
 import androidx.room.*
 import androidx.room.OnConflictStrategy.REPLACE
 
-//TODO: fetch everything with a join query?
 
-//TODO: I think I can join products and discounts table and get what i want
 @Dao
 interface ProductsDao {
     @Query("SELECT productentity.code, productentity.name, productentity.price, discountentity.code as discount " +

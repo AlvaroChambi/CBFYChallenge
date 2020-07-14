@@ -15,7 +15,6 @@ abstract class BaseActivity: AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.base_activity)
-        //TODO why?
         if(savedInstanceState == null) {
             val manager = supportFragmentManager
             val transaction = manager.beginTransaction()

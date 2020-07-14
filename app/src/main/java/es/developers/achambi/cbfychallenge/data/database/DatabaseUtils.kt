@@ -14,7 +14,6 @@ object DatabaseUtils {
         if (file.exists()) {
             return
         }
-        //TODO: when could this happen?
         if (!file.parentFile?.exists()!!) {
             file.parentFile?.mkdirs()
         }

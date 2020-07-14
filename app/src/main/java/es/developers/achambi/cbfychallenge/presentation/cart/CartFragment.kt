@@ -131,7 +131,6 @@ class ItemsAdapter(private val list: List<CartItemPresentation>,
 
 }
 
-//TODO explain why this is better than having the strings of it
 class CartItemPresentation(val  id: Long,
                             val productPresentation: ProductPresentation,
                            val quantity: String, val totalPrice: String)
