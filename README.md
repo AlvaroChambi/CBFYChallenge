@@ -1,4 +1,4 @@
-# Cabify Challenge
+# Challenge
 
 In order to solve this challenge I'm taking the following steps.
 - Define the requirements and the UX of the app
